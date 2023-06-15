@@ -1,0 +1,164 @@
+:root {
+  --primary-color: #17a2b8;
+  --dark-color: #343a40;
+  --light-color: #f4f4f4;
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  /* background-color: #70A9A1; */
+  /* background: #eee; */
+  background: #DCD6F7;
+}
+
+.alert {
+  padding: 0.8rem;
+  margin: 1rem 0;
+  opacity: 0.9;
+  background: var(--light-color);
+  color: #333;
+}
+
+.btn-primary,
+.bg-primary,
+.badge-primary,
+.alert-primary {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.btn-light,
+.bg-light,
+.badge-light,
+.alert-light {
+  background: var(--light-color);
+  color: #333;
+}
+
+.btn-dark,
+.bg-dark,
+.badge-dark,
+.alert-dark {
+  background: var(--dark-color);
+  color: #fff;
+}
+
+.btn-danger,
+.bg-danger,
+.badge-danger,
+.alert-danger {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+.btn-success,
+.bg-success,
+.badge-success,
+.alert-success {
+  background: var(--success-color);
+  color: #fff;
+}
+
+.btn-white,
+.bg-white,
+.badge-white,
+.alert-white {
+  background: #fff;
+  color: #333;
+  border: #ccc solid 1px;
+}
+
+.mainGridContainer {
+  position: absolute;
+  display: grid;
+  grid-template-areas: "header header" "sidebar content" "footer footer";
+  grid-template-rows: 45px 1fr 50px;
+  grid-template-columns: 25% 1fr;
+  bottom: 0px;
+  top: 0px;
+  width: 100%;
+}
+
+.header {
+  grid-area: header;
+  background-color: #f25d27;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.sidebar {
+  grid-area: sidebar;
+  margin: 10px;
+  /* height: 100%; */
+  position: fixed;
+  padding-left: 25px;
+  padding-right: 120px;
+}
+
+.footer {
+  grid-area: footer;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  background: #393e41;
+  color: #dcd6f7;
+}
+
+.content {
+  grid-area: content;
+}
+
+.profile-style {
+  height: 95%;
+  margin: 15px;
+}
+
+.snackbar-container {
+  position: fixed;
+  min-width: 250px;
+  left: 5px;
+  bottom: 0px;
+  z-index: 1;
+}
+
+.snackbar {
+  height: auto;
+  margin: 15px;
+  position: relative;
+  color: #f0f0f0;
+  font-size: 15px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+  -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+  -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+}
+
+.snackbar-success {
+  background-color: #33cc33;
+}
+
+.snackbar-danger {
+  background-color: #ff3300;
+}
+
+.snackbar-neutral {
+  background-color: #6962A6;
+}
+
+.snackbar-button {
+  background-color: inherit;
+  border: none;
+  color: white;
+  cursor: pointer;
+  float: right;
+}
