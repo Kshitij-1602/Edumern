@@ -4,13 +4,13 @@ import React, { useEffect } from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 import { FaTwitter, FaYoutube, FaInstagram, FaFacebook, FaLinkedin, FaGithub, FaUser, FaUniversity, FaGraduationCap, FaMapMarkerAlt, FaUserCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { getCurrentProfile, deleteAccount } from '../../actions/profile'
+import { getCurrentProfile } from '../../actions/profile'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
 import Sidebar from '../layout/Sidebar'
 
-function Profile({ profile: {profile, loading}, getCurrentProfile, deleteAccount }) {
+function Profile({ profile: {profile, loading}, getCurrentProfile }) {
   useEffect(() => {
     getCurrentProfile()
   }, [getCurrentProfile])
@@ -196,20 +196,6 @@ function Profile({ profile: {profile, loading}, getCurrentProfile, deleteAccount
                 >
                   Edit Profile
                 </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                      deleteAccount();
-                    }
-                  }}
-                  style={{
-                    borderRadius: '20px',
-                    padding: '8px 20px'
-                  }}
-                >
-                  Delete Account
-                </Button>
               </div>
             </Card.Body>
           </Card>
@@ -221,7 +207,6 @@ function Profile({ profile: {profile, loading}, getCurrentProfile, deleteAccount
 
 Profile.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
-  deleteAccount: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 }
 
@@ -229,4 +214,4 @@ const mapStateToProps = state => ({
   profile: state.profile
 })
 
-export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(Profile);
+export default connect(mapStateToProps, { getCurrentProfile })(Profile);
