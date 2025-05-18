@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { addComment } from '../../actions/post'
 import { motion } from 'framer-motion'
+import { FaCommentDots } from 'react-icons/fa'
 
 const CreateComment = ({ postId, addComment }) => {
     const [text, setText] = useState('')
@@ -46,7 +47,11 @@ const CreateComment = ({ postId, addComment }) => {
                     />
                 </Form.Group>
                 <div className="d-flex justify-content-end">
-                    <Button
+                    <motion.button
+                        whileTap={{ scale: 0.96 }}
+                        whileHover={{ scale: 1.04, boxShadow: '0 4px 16px rgba(105,98,166,0.10)' }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                        as={Button}
                         type="submit"
                         variant="primary"
                         disabled={!text.trim()}
@@ -54,11 +59,26 @@ const CreateComment = ({ postId, addComment }) => {
                             backgroundColor: '#6962A6',
                             border: 'none',
                             borderRadius: '20px',
-                            padding: '8px 20px'
+                            padding: '8px 20px',
+                            opacity: !text.trim() ? 0.6 : 1,
+                            pointerEvents: !text.trim() ? 'none' : 'auto',
+                            cursor: !text.trim() ? 'not-allowed' : 'pointer',
+                            fontWeight: 600
+                        }}
+                        onMouseOver={e => {
+                            if (text.trim()) {
+                                e.target.style.backgroundColor = '#8377D1';
+                            }
+                        }}
+                        onMouseOut={e => {
+                            if (text.trim()) {
+                                e.target.style.backgroundColor = '#6962A6';
+                            }
                         }}
                     >
+                        <FaCommentDots className="me-2" />
                         Post Comment
-                    </Button>
+                    </motion.button>
                 </div>
             </Form>
         </motion.div>

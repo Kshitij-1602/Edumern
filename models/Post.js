@@ -21,6 +21,10 @@ const PostSchema = new mongoose.Schema({
     topic: {
         type: String
     },
+    date: {
+        type: Date,
+        default: Date.now
+    },
     likes: [
         {
             user: {
@@ -46,6 +50,10 @@ const PostSchema = new mongoose.Schema({
             text: {
                 type: String,
                 required: true
+            },
+            date: {
+                type: Date,
+                default: Date.now
             },
             likes: [{
                 user: {

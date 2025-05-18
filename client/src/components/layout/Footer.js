@@ -20,8 +20,8 @@ function Footer() {
           </Col>
           <Col md={4} className="text-center mb-3 mb-md-0">
             <div className="d-flex justify-content-center gap-3">
-              <Link to="/about" className="text-white text-decoration-none">About</Link>
-              <Link to="/contact" className="text-white text-decoration-none">Contact</Link>
+              <Link to="/dashboard" className="text-white text-decoration-none">About</Link>
+              <Link to="/dashboard" className="text-white text-decoration-none">Contact</Link>
               <Link to="/rules" className="text-white text-decoration-none">Rules</Link>
             </div>
           </Col>

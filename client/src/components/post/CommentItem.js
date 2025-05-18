@@ -24,40 +24,43 @@ const CommentItem = ({
             borderRadius: '10px',
             border: '1px solid #e9ecef'
         }}>
-            <div className="d-flex align-items-center mb-2">
-                <Link to={`/profile/${user}`} className="text-decoration-none">
-                    <div className="d-flex align-items-center">
-                        <img 
-                            src={avatar} 
-                            alt={name}
-                            className="rounded-circle me-2"
-                            style={{ 
-                                width: '35px', 
-                                height: '35px', 
-                                objectFit: 'cover',
-                                border: '2px solid #fff',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                            }}
-                        />
-                        <div>
-                            <h6 className="mb-0" style={{ color: '#393E41', fontWeight: '600', fontSize: '0.9rem' }}>{name}</h6>
-                            <small className="text-muted" style={{ fontSize: '0.8rem' }}>
-                                {new Date(date).toLocaleDateString()}
-                            </small>
-                        </div>
+            <Link to={`/profile/${user}`} className="text-decoration-none">
+                <div className="d-flex align-items-center">
+                    <img 
+                        src={avatar} 
+                        alt={name}
+                        className="rounded-circle me-2"
+                        style={{ 
+                            width: '35px', 
+                            height: '35px', 
+                            objectFit: 'cover',
+                            border: '2px solid #fff',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                    />
+                    <div>
+                        <h6 className="mb-0" style={{ color: '#393E41', fontWeight: '600', fontSize: '0.9rem' }}>{name}</h6>
+                        <small className="text-muted" style={{ fontSize: '0.8rem' }}>
+                            {date ? new Date(date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            }) : 'Date not available'}
+                        </small>
                     </div>
-                </Link>
-            </div>
+                </div>
+            </Link>
             <p className="mb-3" style={{ 
                 color: '#666', 
                 fontSize: '0.95rem', 
                 lineHeight: '1.5',
                 marginLeft: '47px' // Aligns with the name after the avatar
             }}>{text}</p>
-            <div className="d-flex align-items-center" style={{ marginLeft: '47px' }}>
+            <div className="d-flex justify-content-end">
                 <Link 
                     to={`/report/comment/${_id}`} 
                     className="btn btn-light btn-sm me-2" 
+                    aria-label="Report comment"
                     style={{ 
                         borderRadius: '15px', 
                         padding: '5px 10px',
@@ -83,6 +86,7 @@ const CommentItem = ({
                         variant="danger"
                         size="sm"
                         onClick={handleDelete}
+                        aria-label="Delete comment"
                         style={{ 
                             borderRadius: '15px', 
                             padding: '5px 10px',

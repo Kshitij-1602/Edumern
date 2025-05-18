@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 const Snackbar = ({ alerts, removeAlert }) => 
     alerts !== null &&
     alerts.length > 0 &&
-    (<div className='snackbar-container'>
+    (<div className='snackbar-container' aria-live="polite">
         {alerts.map(alert => (
             <div key={alert.id} className={`snackbar snackbar-${alert.alertType}`}>
                 {alert.msg}

@@ -14,20 +14,28 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
         password: '',
         password2: ''
     });
+    const [loading, setLoading] = useState(false);
 
     const { name, email, password, password2 } = formData;
 
-    const onChange = e => setFormData({
-        ...formData,
-        [e.target.name]: e.target.value 
-    });
+    const onChange = e => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value 
+        });
+        if (typeof window !== 'undefined' && window.clearAlert) {
+            window.clearAlert();
+        }
+    };
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
         if(password !== password2) {
             setAlert('Passwords do not match', 'danger', 3000);
         } else {
-            register({ name, email, password });
+            setLoading(true);
+            await register({ name, email, password });
+            setLoading(false);
         }
     };
 
@@ -35,6 +43,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     if(isAuthenticated) {
         return <Redirect to='/posts' />;
     }
+
+    const isDisabled = loading || !name || !email || !password || !password2 || password !== password2;
 
     return (
         <Container className="py-5">
@@ -101,24 +111,36 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                                     variant="primary" 
                                     type="submit" 
                                     className="w-100 py-2 mb-3"
-                                    disabled={
-                                        !name || !email || !password || !password2 || password !== password2
-                                    }
+                                    disabled={isDisabled}
                                     style={{
                                         backgroundColor: "#ff5722",
                                         borderColor: "#ff5722",
-                                        transition: "all 0.3s ease"
+                                        transition: "all 0.3s ease",
+                                        opacity: isDisabled ? 0.6 : 1,
+                                        pointerEvents: isDisabled ? 'none' : 'auto',
+                                        cursor: isDisabled ? 'not-allowed' : 'pointer'
                                     }}
                                     onMouseOver={(e) => {
-                                        e.target.style.backgroundColor = "#ff7b54";
-                                        e.target.style.borderColor = "#ff7b54";
+                                        if (!isDisabled) {
+                                            e.target.style.backgroundColor = "#ff7b54";
+                                            e.target.style.borderColor = "#ff7b54";
+                                        }
                                     }}
                                     onMouseOut={(e) => {
-                                        e.target.style.backgroundColor = "#ff8c69";
+                                        if (!isDisabled) {
+                                            e.target.style.backgroundColor = "#ff8c69";
                                             e.target.style.borderColor = "#ff8c69";
+                                        }
                                     }}
                                 >
-                                    Create Account
+                                    {loading ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                            Creating...
+                                        </>
+                                    ) : (
+                                        'Create Account'
+                                    )}
                                 </Button>
 
                                 <p className="text-center mb-0">

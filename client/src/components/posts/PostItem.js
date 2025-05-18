@@ -5,7 +5,7 @@ import { addLike, addDislike, deletePost } from '../../actions/post';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function PostItem({
     addLike,
@@ -45,7 +45,7 @@ function PostItem({
 
     return (
         <motion.div
-            whileHover={{ scale: 1.01 }}
+            whileHover={{ scale: 1.01, boxShadow: '0 4px 16px rgba(105,98,166,0.10)' }}
             transition={{ duration: 0.2 }}
         >
             <Card className="mb-3 border-0 shadow-sm" style={{ borderRadius: '15px', overflow: 'hidden' }}>
@@ -67,7 +67,11 @@ function PostItem({
                                 <div>
                                     <h6 className="mb-0" style={{ color: '#393E41', fontWeight: '600' }}>{name}</h6>
                                     <small className="text-muted">
-                                        {new Date(date).toLocaleDateString()}
+                                        {date ? new Date(date).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric'
+                                        }) : 'Date not available'}
                                     </small>
                                 </div>
                             </div>
@@ -86,11 +90,15 @@ function PostItem({
                             placement="top"
                             overlay={<Tooltip>Like</Tooltip>}
                         >
-                            <Button
+                            <motion.button
+                                as={Button}
                                 variant="light"
                                 size="sm"
                                 className="me-2 d-flex align-items-center"
                                 onClick={handleLike}
+                                aria-label="Like post"
+                                whileTap={{ scale: 0.92 }}
+                                whileHover={{ scale: 1.08, backgroundColor: 'rgba(105,98,166,0.08)' }}
                                 style={{
                                     backgroundColor: isLiked ? 'rgba(105, 98, 166, 0.1)' : 'transparent',
                                     color: isLiked ? '#6962A6' : '#666',
@@ -100,19 +108,30 @@ function PostItem({
                                 }}
                             >
                                 <FaThumbsUp className="me-1" />
-                                <span>{likes.length}</span>
-                            </Button>
+                                <motion.span
+                                    key={likes.length}
+                                    initial={{ scale: 0.7, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: 'spring', stiffness: 300 }}
+                                >
+                                    {likes.length}
+                                </motion.span>
+                            </motion.button>
                         </OverlayTrigger>
 
                         <OverlayTrigger
                             placement="top"
                             overlay={<Tooltip>Dislike</Tooltip>}
                         >
-                            <Button
+                            <motion.button
+                                as={Button}
                                 variant="light"
                                 size="sm"
                                 className="me-2 d-flex align-items-center"
                                 onClick={handleDislike}
+                                aria-label="Dislike post"
+                                whileTap={{ scale: 0.92 }}
+                                whileHover={{ scale: 1.08, backgroundColor: 'rgba(105,98,166,0.08)' }}
                                 style={{
                                     backgroundColor: isDisliked ? 'rgba(105, 98, 166, 0.1)' : 'transparent',
                                     color: isDisliked ? '#6962A6' : '#666',
@@ -122,12 +141,20 @@ function PostItem({
                                 }}
                             >
                                 <FaThumbsDown className="me-1" />
-                                <span>{dislikes.length}</span>
-                            </Button>
+                                <motion.span
+                                    key={dislikes.length}
+                                    initial={{ scale: 0.7, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: 'spring', stiffness: 300 }}
+                                >
+                                    {dislikes.length}
+                                </motion.span>
+                            </motion.button>
                         </OverlayTrigger>
 
                         <Link to={`/posts/${_id}`} className="text-decoration-none">
-                            <Button
+                            <motion.button
+                                as={Button}
                                 variant="light"
                                 size="sm"
                                 className="me-2 d-flex align-items-center"
@@ -137,10 +164,19 @@ function PostItem({
                                     borderRadius: '20px',
                                     padding: '6px 12px'
                                 }}
+                                whileTap={{ scale: 0.96 }}
+                                whileHover={{ scale: 1.08, backgroundColor: 'rgba(105,98,166,0.08)' }}
                             >
                                 <FaComment className="me-1" />
-                                <span>{comments.length}</span>
-                            </Button>
+                                <motion.span
+                                    key={comments.length}
+                                    initial={{ scale: 0.7, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: 'spring', stiffness: 300 }}
+                                >
+                                    {comments.length}
+                                </motion.span>
+                            </motion.button>
                         </Link>
 
                         <Link to={`/report/post/${_id}`} className="text-decoration-none">
@@ -148,6 +184,7 @@ function PostItem({
                                 variant="light"
                                 size="sm"
                                 className="me-2"
+                                aria-label="Report post"
                                 style={{ 
                                     color: '#666', 
                                     border: 'none',
@@ -168,6 +205,7 @@ function PostItem({
                                     variant="light"
                                     size="sm"
                                     onClick={handleDelete}
+                                    aria-label="Delete post"
                                     style={{ 
                                         color: '#dc3545', 
                                         border: 'none',

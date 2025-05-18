@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FaCode, FaHome, FaCalculator, FaLanguage, FaFlask, FaHistory } from 'react-icons/fa';
+import { FaCode, FaHome, FaCalculator, FaLanguage, FaFlask, FaBookOpen } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Sidebar from './Sidebar';
 
@@ -12,7 +12,7 @@ const Topics = () => {
         { path: '/posts/topic/programming', icon: <FaCode size={40} />, title: 'Programming', color: '#4ECDC4' },
         { path: '/posts/topic/science', icon: <FaFlask size={40} />, title: 'Science', color: '#45B7D1' },
         { path: '/posts/topic/languages', icon: <FaLanguage size={40} />, title: 'Languages', color: '#96CEB4' },
-        { path: '/posts/topic/history', icon: <FaHistory size={40} />, title: 'History', color: '#FF9F1C' }
+        { path: '/posts/topic/history', icon: <FaBookOpen size={40} />, title: 'History', color: '#FF9F1C' }
     ];
 
     return (

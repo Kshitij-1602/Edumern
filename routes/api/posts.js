@@ -8,7 +8,9 @@ const Reports = require('../../models/Reports')
 
 
 router.post('/', [ auth, [
-    check('title', 'Title is required').not().isEmpty()
+    check('title', 'Title is required').not().isEmpty(),
+    check('text', 'Text is required').not().isEmpty(),
+    check('topic', 'Topic is required').not().isEmpty()
 ] ], async (req, res) => {
     const errors = validationResult(req)
     if(!errors.isEmpty()) {
@@ -16,20 +18,25 @@ router.post('/', [ auth, [
     }
     try {
         const user = await Users.findById(req.user.id).select('-password')
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' })
+        }
+
         const newPost = new Post({
             title: req.body.title,
             text: req.body.text,
             name: user.name,
             avatar: user.avatar,
             user: req.user.id,
-            topic : req.body.topic
+            topic: req.body.topic,
+            date: new Date()
         })
         const post = await newPost.save()
         res.json(post)
 
     } catch (error) {
         console.error(error.message)
-        res.status(500).send('Server Error')
+        res.status(500).json({ msg: 'Server Error', error: error.message })
     }
 })
 
@@ -206,24 +213,33 @@ router.post(
         }
 
         try {
-            const user = await User.findById(req.user.id).select('-password')
+            const user = await Users.findById(req.user.id).select('-password')
+            if (!user) {
+                return res.status(404).json({ msg: 'User not found' })
+            }
+
             const post = await Post.findById(req.params.id)
+            if (!post) {
+                return res.status(404).json({ msg: 'Post not found' })
+            }
 
             const newComment = {
                 text: req.body.text,
                 name: user.name,
                 avatar: user.avatar,
-                user: req.user.id
+                user: req.user.id,
+                date: new Date()
             }
 
             post.comments.unshift(newComment)
-
             await post.save()
-
             res.json(post.comments)
         } catch (err) {
             console.error(err.message)
-            res.status(500).send('Server Error')
+            if(err.kind === 'ObjectId') {
+                return res.status(404).json({ msg: 'Post not found' })
+            }
+            res.status(500).json({ msg: 'Server Error', error: err.message })
         }
     }
 )

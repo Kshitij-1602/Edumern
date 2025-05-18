@@ -11,18 +11,24 @@ const CreatePost = ({ addPost }) => {
     const [text, setText] = useState('')
     const [show, setShow] = useState(false)
     const [topic, setTopic] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleClose = () => {
         setShow(false)
         setTitle('')
         setText('')
         setTopic('')
+        setLoading(false)
     }
 
-    const handleSubmit = () => {
-        addPost({ title, text, topic })
+    const handleSubmit = async () => {
+        setLoading(true)
+        await addPost({ title, text, topic })
+        setLoading(false)
         handleClose()
     }
+
+    const isDisabled = loading || !title.trim() || !text.trim() || !topic.trim()
 
     return (
         <Fragment>
@@ -52,7 +58,7 @@ const CreatePost = ({ addPost }) => {
                 </motion.div>
             </div>
 
-            <Modal 
+            <Modal
                 show={show} 
                 onHide={handleClose}
                 centered
@@ -127,18 +133,45 @@ const CreatePost = ({ addPost }) => {
                     >
                         Cancel
                     </Button>
-                    <Button 
-                        variant="primary" 
+                    <motion.button
+                        whileTap={{ scale: 0.96 }}
+                        whileHover={{ scale: 1.04, boxShadow: '0 4px 16px rgba(105,98,166,0.10)' }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                        as={Button}
+                        variant="primary"
                         onClick={handleSubmit}
-                        style={{ 
+                        disabled={isDisabled}
+                        style={{
                             backgroundColor: '#6962A6',
                             border: 'none',
                             borderRadius: '20px',
-                            padding: '8px 20px'
+                            padding: '8px 20px',
+                            opacity: isDisabled ? 0.6 : 1,
+                            pointerEvents: isDisabled ? 'none' : 'auto',
+                            cursor: isDisabled ? 'not-allowed' : 'pointer',
+                            fontWeight: 600
+                        }}
+                        onMouseOver={e => {
+                            if (!isDisabled) {
+                                e.target.style.backgroundColor = '#8377D1';
+                            }
+                        }}
+                        onMouseOut={e => {
+                            if (!isDisabled) {
+                                e.target.style.backgroundColor = '#6962A6';
+                            }
                         }}
                     >
-                        Create Post
-                    </Button>
+                        <FaPlus className="me-2" />
+                        {loading ? (
+                            <>
+                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Creating...
+                            </>
+                        ) : (
+                            'Create Post'
+                        )}
+                    </motion.button>
                 </Modal.Footer>
             </Modal>
         </Fragment>

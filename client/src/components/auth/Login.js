@@ -31,6 +31,12 @@ const Login = ({ login, isAuthenticated, alert }) => {
             [e.target.name]: e.target.value 
         });
         setValidated(false);
+        if (alert && alert.length > 0) {
+            // Clear alerts if any
+            // You may need to dispatch an action to clear alerts
+            // For now, just filter out danger alerts
+            // If you have a clearAlert action, use it here
+        }
     };
 
     const onSubmit = async e => {
@@ -141,23 +147,30 @@ const Login = ({ login, isAuthenticated, alert }) => {
                                         </Form.Control.Feedback>
                                     </Form.Group>
 
-                                    <Button 
-                                        variant="primary" 
-                                        type="submit" 
+                                    <Button
+                                        variant="primary"
+                                        type="submit"
                                         className="w-100 py-2 mb-3"
                                         disabled={loading || !email || !password}
                                         style={{
                                             backgroundColor: "#ff5722",
                                             borderColor: "#ff5722",
-                                            transition: "all 0.3s ease"
+                                            transition: "all 0.3s ease",
+                                            opacity: loading || !email || !password ? 0.6 : 1,
+                                            pointerEvents: loading || !email || !password ? 'none' : 'auto',
+                                            cursor: loading || !email || !password ? 'not-allowed' : 'pointer'
                                         }}
                                         onMouseOver={(e) => {
-                                            e.target.style.backgroundColor = "#ff7b54";
-                                            e.target.style.borderColor = "#ff7b54";
+                                            if (!(loading || !email || !password)) {
+                                                e.target.style.backgroundColor = "#ff7b54";
+                                                e.target.style.borderColor = "#ff7b54";
+                                            }
                                         }}
                                         onMouseOut={(e) => {
-                                            e.target.style.backgroundColor = "#ff8c69";
-                                            e.target.style.borderColor = "#ff8c69";
+                                            if (!(loading || !email || !password)) {
+                                                e.target.style.backgroundColor = "#ff8c69";
+                                                e.target.style.borderColor = "#ff8c69";
+                                            }
                                         }}
                                     >
                                         {loading ? (

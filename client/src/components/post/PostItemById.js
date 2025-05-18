@@ -30,6 +30,13 @@ function PostItemById({ getPost, post: {post, loading}, addLikeById, addDislikeB
                         />
                         <div>
                             <h6 className="mb-0" style={{ color: '#393E41', fontWeight: '600' }}>{post.name}</h6>
+                            <small className="text-muted">
+                                {post.date ? new Date(post.date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                }) : 'Date not available'}
+                            </small>
                         </div>
                     </div>
                 </Link>
