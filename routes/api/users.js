@@ -8,9 +8,6 @@ const config = require('config')
 
 const User = require('../../models/Users')
 
-// @route   POST api/users
-// @desc    register user
-// @access  Public
 router.post('/', [
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),

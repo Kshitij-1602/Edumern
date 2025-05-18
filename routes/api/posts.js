@@ -6,9 +6,7 @@ const Users = require('../../models/Users')
 const Post = require('../../models/Post')
 const Reports = require('../../models/Reports')
 
-// @route   POST api/posts
-// @desc    Create a post
-// @access  Private
+
 router.post('/', [ auth, [
     check('title', 'Title is required').not().isEmpty()
 ] ], async (req, res) => {
@@ -35,9 +33,7 @@ router.post('/', [ auth, [
     }
 })
 
-// @route   GET api/posts
-// @desc    get all posts
-// @access  Private
+
 router.get('/', auth, async (req, res) => {
     try {
         const posts = await Post.find().sort({ date: -1 })
@@ -48,9 +44,7 @@ router.get('/', auth, async (req, res) => {
     }
 })
 
-// @route   GET api/posts/:id
-// @desc    get post by id
-// @access  Private
+
 router.get('/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -67,9 +61,7 @@ router.get('/:id', auth, async (req, res) => {
     }
 })
 
-// @route   GET api/posts/topic/:topicName
-// @desc    get post by topic
-// @access  Private
+
 router.get('/topic/:topicName', auth, async(req, res) => {
     try {
         const posts = await Post.find({ topic: req.params.topicName })    
@@ -80,9 +72,7 @@ router.get('/topic/:topicName', auth, async(req, res) => {
     }
 })
 
-// @route   DELETE api/posts/:id
-// @desc    delete a post
-// @access  Private
+
 router.delete('/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -107,9 +97,6 @@ router.delete('/:id', auth, async (req, res) => {
     }
 })
 
-// @route   PUT api/posts/like/:id
-// @desc    like a post
-// @access  Private
 router.put('/like/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -142,9 +129,7 @@ router.put('/like/:id', auth, async (req, res) => {
     }
 })
 
-// @route   PUT api/posts/dislike/:id
-// @desc    dislike a post
-// @access  Private
+
 router.put('/dislike/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -177,9 +162,7 @@ router.put('/dislike/:id', auth, async (req, res) => {
     }
 })
 
-// @route    PUT api/posts/unlike/:id
-// @desc     Unlike a post
-// @access   Private
+
 router.put('/unlike/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -205,9 +188,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
     }
 })
 
-// @route    POST api/posts/comment/:id
-// @desc     Comment on a post
-// @access   Private
+
 router.post(
     '/comment/:id',
     [
@@ -247,9 +228,7 @@ router.post(
     }
 )
 
-// @route    PUT api/posts/comment/like/:id/:comment_id
-// @desc     Like comment
-// @access   Private
+
 router.put('/comment/like/:id/:comment_id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -298,9 +277,7 @@ router.put('/comment/like/:id/:comment_id', auth, async (req, res) => {
     }
 })
 
-// @route    PUT api/posts/comment/dislike/:id/:comment_id
-// @desc     dislike comment
-// @access   Private
+
 router.put('/comment/dislike/:id/:comment_id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -349,9 +326,7 @@ router.put('/comment/dislike/:id/:comment_id', auth, async (req, res) => {
     }
 })
 
-// @route    PUT api/posts/comment/unlike/:id/:comment_id
-// @desc     Unlike comment
-// @access   Private
+
 router.put('/comment/unlike/:id/:comment_id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -389,9 +364,7 @@ router.put('/comment/unlike/:id/:comment_id', auth, async (req, res) => {
     }
 })
 
-// @route    DELETE api/posts/comment/:id/:comment_id
-// @desc     Delete comment
-// @access   Private
+
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -427,9 +400,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     }
 })
 
-// @route    POST api/posts/report
-// @desc     Report post or comment
-// @access   Private
+
 router.post('/report', auth, async (req, res) => {
     try {
         const newReport = new Reports({

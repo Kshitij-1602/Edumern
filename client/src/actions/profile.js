@@ -57,10 +57,8 @@ export const getProfileById = userId => async dispatch => {
 }
 
 // Create or update profile
-export const createProfile = (formData, history) => async dispatch => {
+export const createProfile = (formData, history, stayOnEdit = false) => async dispatch => {
     try {
-        console.log('create profile reached')
-        console.log(formData)
         const config = {
             headers: {
                 'Content-Type': 'application/json'
@@ -72,19 +70,24 @@ export const createProfile = (formData, history) => async dispatch => {
             type: GET_PROFILE,
             payload: res.data
         })
-        dispatch(setAlert('Profile Created', 'success'))
+        dispatch(setAlert('Profile Saved', 'success'));
 
-        history.push('/profile')
+        // Always fetch the latest profile after saving
+        dispatch(getCurrentProfile());
+
+        if (stayOnEdit) {
+            history.push('/edit-profile');
+        } else {
+            history.push('/profile');
+        }
     } catch (err) {
-        const errors = err.response.data.errors
-
+        const errors = err.response?.data?.errors;
         if(errors){
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
         }
-
         dispatch({
             type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
+            payload: { msg: err.response?.statusText, status: err.response?.status }
         })
     }
 }

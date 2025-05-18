@@ -6,9 +6,7 @@ const User = require('../../models/Users')
 // const Post = require('../../models/Post')
 const { check,validationResult } = require('express-validator')
 
-// @route   GET api/profile/me
-// @desc    get current users profile
-// @access  Private
+
 router.get('/me', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name','avatar'])
@@ -22,13 +20,12 @@ router.get('/me', auth, async (req, res) => {
     }
 })
 
-// @route   POST api/profile/
-// @desc    create or update user profile
-// @access  Private
+
 router.post('/', [ auth, [
     check('university', 'University is required').not().isEmpty(),
     check('degree', 'Degree is required').not().isEmpty(),
-    check('location', 'Location is required').not().isEmpty()
+    check('location', 'Location is required').not().isEmpty(),
+    check('skills', 'Skills are required').not().isEmpty()
 ] ], async (req,res) => {
     const errors = validationResult(req)
     if(!errors.isEmpty()) {
@@ -58,7 +55,10 @@ router.post('/', [ auth, [
     if(location) profileFields.location = location
     if(status) profileFields.status = status
     if(skills) {
-        profileFields.skills = skills.split(',').map(skill => skill.trim())
+        // Split skills by comma, trim whitespace, and filter out empty strings
+        profileFields.skills = skills.split(',')
+            .map(skill => skill.trim())
+            .filter(skill => skill.length > 0)
     }
     // Build social object
     profileFields.social = {}
@@ -89,9 +89,7 @@ router.post('/', [ auth, [
     }
 })
 
-// @route   GET api/profile/
-// @desc    get all profiles
-// @access  Public
+
 router.get('/', async (req,res) => {
     try {
         const profiles = await Profile.find().populate('user', ['name', 'avatar'])
@@ -102,9 +100,7 @@ router.get('/', async (req,res) => {
     }
 })
 
-// @route   GET api/profile/user/:user_id
-// @desc    get profile by user id
-// @access  Public
+
 router.get('/user/:user_id', async (req,res) => {
     try {
         const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name', 'avatar'])
@@ -121,10 +117,11 @@ router.get('/user/:user_id', async (req,res) => {
     }
 })
 
-// @route   DELETE api/profile/
-// @desc    delete profile, user and posts
-// @access  Private
+
 router.delete('/', auth, async (req,res) => {
+    // Disabled for safety: do not allow account or post deletion from API
+    return res.status(403).json({ msg: 'Account deletion is disabled.' });
+    /*
     try {
         // remove user posts
         await Post.deleteMany({ user: req.user.id })
@@ -137,6 +134,7 @@ router.delete('/', auth, async (req,res) => {
         console.error(err.message)
         res.status(500).send('Server Error')
     }
+    */
 })
 
 module.exports = router

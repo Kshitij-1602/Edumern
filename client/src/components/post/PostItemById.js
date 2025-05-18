@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { Paper, IconButton, Avatar } from '@material-ui/core'
-import { Comment, Block, KeyboardArrowUp, KeyboardArrowDown } from '@material-ui/icons'
+import { Button } from 'react-bootstrap'
+import { FaCommentAlt, FaFlag, FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { addLikeById, addDislikeById, getPost } from '../../actions/post'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -9,71 +9,68 @@ import { Link } from 'react-router-dom'
 function PostItemById({ getPost, post: {post, loading}, addLikeById, addDislikeById, postId }) {
     useEffect(() => {
         getPost(postId)
-    }, [getPost])
-    return !loading && post !== null && (
-        <div style={previewStyle}>
-            <Paper elevation={3}>
-                <Link to={`/profile/${post.user}`} style={linkStyle}>
-                    <Avatar src={post.avatar} style={avatarStyle}/>
-                    <span style={nameStyle}>{post.name}</span>
+    }, [getPost, postId])
+    if (loading || !post) return null
+    return (
+        <>
+            <div className="d-flex align-items-center mb-3">
+                <Link to={`/profile/${post.user}`} className="text-decoration-none">
+                    <div className="d-flex align-items-center">
+                        <img 
+                            src={post.avatar} 
+                            alt={post.name}
+                            className="rounded-circle me-2"
+                            style={{ 
+                                width: '40px', 
+                                height: '40px', 
+                                objectFit: 'cover',
+                                border: '2px solid #fff',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                            }}
+                        />
+                        <div>
+                            <h6 className="mb-0" style={{ color: '#393E41', fontWeight: '600' }}>{post.name}</h6>
+                        </div>
+                    </div>
                 </Link>
-                <h3 style={textStyle}>{post.title}</h3>
-                <p style={textStyle}>{post.text}</p>
-
-                <div style={buttonStyle}>
-                    <IconButton size='small' onClick={e => addLikeById(post._id)}>
-                        <KeyboardArrowUp fontSize='default' />
-                    </IconButton>
-                    <h5>{post.likes.length - post.dislikes.length}</h5>
-                    <IconButton size='small' onClick={e => addDislikeById(post._id)}>
-                        <KeyboardArrowDown fontSize='default' />
-                    </IconButton>
-                    <IconButton size='small' component={Link} to={`/posts/${post._id}`}>
-                        <Comment fontSize='inherit' />
-                        <h5>{post.comments.length}</h5>
-                        <span style={{ fontSize: '0.7em', marginLeft: '2px' }}>
-                            Comment
-                        </span>
-                    </IconButton>
-                    <IconButton size='small' href="mailto:devankrf@gmail.com?subject=Reporting content from EduForum">
-                        <Block fontSize='inherit' />
-                        <span style={{ fontSize: '0.7em' }}>Report</span>
-                    </IconButton>
-                </div>
-            </Paper>
-        </div>
+            </div>
+            <h4 className="mb-2" style={{ color: '#393E41', fontWeight: '600' }}>{post.title}</h4>
+            <p className="mb-3" style={{ color: '#666', lineHeight: '1.6' }}>{post.text}</p>
+            <div className="d-flex align-items-center mb-2">
+                <Button
+                    variant="light"
+                    className="me-2"
+                    onClick={() => addLikeById(post._id)}
+                    style={{ borderRadius: '20px', padding: '6px 12px', color: '#393E41', border: 'none' }}
+                >
+                    <FaArrowUp className="me-1" />
+                </Button>
+                <span style={{ fontWeight: 600, color: '#393E41', marginRight: 8 }}>{post.likes.length - post.dislikes.length}</span>
+                <Button
+                    variant="light"
+                    className="me-2"
+                    onClick={() => addDislikeById(post._id)}
+                    style={{ borderRadius: '20px', padding: '6px 12px', color: '#393E41', border: 'none' }}
+                >
+                    <FaArrowDown className="me-1" />
+                </Button>
+                <Link to={`/posts/${post._id}`} className="btn btn-light btn-sm me-2" style={{ borderRadius: '15px', padding: '5px 10px', color: '#393E41', border: 'none' }}>
+                    <FaCommentAlt className="me-1" />
+                    <span>{post.comments.length}</span>
+                    <span className="ms-1">Comment</span>
+                </Link>
+                <Button
+                    variant="light"
+                    className="btn-sm"
+                    style={{ borderRadius: '15px', padding: '5px 10px', color: '#dc3545', border: 'none' }}
+                    href={`mailto:devankrf@gmail.com?subject=Reporting content from EduForum`}
+                >
+                    <FaFlag className="me-1" />
+                    Report
+                </Button>
+            </div>
+        </>
     )
-}
-const previewStyle = {
-    margin: '15px'
-}
-
-const textStyle = {
-    margin: '14px',
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word'
-}
-
-const buttonStyle = {
-    margin: '5px',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    gap: '5px'
-}
-
-const linkStyle = { 
-    padding: '8px 8px',
-    display: 'table',
-    textDecoration: 'none' 
-}
-const avatarStyle = { 
-    display: 'table-cell' 
-}
-const nameStyle = { 
-    display: 'table-cell', 
-    verticalAlign: 'middle', 
-    padding: '5px', 
-    color: 'black' 
 }
 
 PostItemById.propTypes = {

@@ -1,105 +1,152 @@
 import React, { Fragment, useState } from 'react'
-import {
-    Fab,
-    Button,
-    TextField,
-    Dialog,
-    DialogActions,
-    DialogTitle,
-    DialogContent,
-    FormControl,
-    Select,
-    InputLabel
-} from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+import { Button, Form, Modal, FloatingLabel } from 'react-bootstrap'
+import { FaPlus } from 'react-icons/fa'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { addPost } from '../../actions/post'
+import { motion } from 'framer-motion'
 
 const CreatePost = ({ addPost }) => {
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
-    const [open, setOpen] = useState(false)
+    const [show, setShow] = useState(false)
     const [topic, setTopic] = useState('')
+
     const handleClose = () => {
-        setOpen(false)
+        setShow(false)
         setTitle('')
         setText('')
         setTopic('')
     }
+
     const handleSubmit = () => {
         addPost({ title, text, topic })
         handleClose()
     }
+
     return (
         <Fragment>
-            <div style={addStyle}>
-                <Fab
-                    onClick={() => setOpen(true)}
-                    size="medium"
-                    color="primary"
-                    aria-label="new_thread"
+            <div className="d-flex justify-content-end mb-3">
+                <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                 >
-                    <Add />
-                </Fab>
+                    <Button
+                        variant="primary"
+                        onClick={() => setShow(true)}
+                        className="rounded-circle"
+                        style={{
+                            width: '50px',
+                            height: '50px',
+                            padding: '0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#6962A6',
+                            border: 'none',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                        }}
+                    >
+                        <FaPlus size={20} />
+                    </Button>
+                </motion.div>
             </div>
-            <Dialog fullWidth={true} maxWidth="md" open={open} onClose={handleClose}>
-                <DialogTitle>New Thread</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        margin="dense"
-                        name="title"
-                        label="Post Title"
-                        variant="outlined"
-                        onChange={e => setTitle(e.target.value)}
-                        value={title}
-                        fullWidth
-                    />
-                    <TextField
-                        margin="dense"
-                        name="text"
-                        label="Post Body"
-                        multiline
-                        rows={10}
-                        variant="outlined"
-                        onChange={e => setText(e.target.value)}
-                        value={text}
-                        fullWidth
-                    />
-                    <FormControl variant='outlined' fullWidth margin='dense'>
-                        <InputLabel>Topic</InputLabel>
-                        <Select
-                            value={topic}
-                            onChange={e => setTopic(e.target.value)}
-                            label='Topic'
+
+            <Modal 
+                show={show} 
+                onHide={handleClose}
+                centered
+                size="lg"
+            >
+                <Modal.Header closeButton style={{ borderBottom: 'none', padding: '1.5rem' }}>
+                    <Modal.Title style={{ color: '#393E41', fontWeight: '600' }}>Create New Thread</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ padding: '0 1.5rem 1.5rem' }}>
+                    <Form>
+                        <FloatingLabel
+                            controlId="title"
+                            label="Post Title"
+                            className="mb-3"
                         >
-                            <option value='science'>Science</option>
-                            <option value='maths'>Maths</option>
-                            <option value='programming'>Programming</option>
-                            <option value='history'>History</option>
-                            <option value='languages'>Languages</option>
-                        </Select>
-                    </FormControl>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="secondary">
+                            <Form.Control
+                                type="text"
+                                value={title}
+                                onChange={e => setTitle(e.target.value)}
+                                placeholder="Enter post title"
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+
+                        <FloatingLabel
+                            controlId="text"
+                            label="Post Content"
+                            className="mb-3"
+                        >
+                            <Form.Control
+                                as="textarea"
+                                value={text}
+                                onChange={e => setText(e.target.value)}
+                                placeholder="Write your post content here..."
+                                style={{ 
+                                    height: '200px',
+                                    borderRadius: '10px',
+                                    resize: 'none'
+                                }}
+                            />
+                        </FloatingLabel>
+
+                        <FloatingLabel
+                            controlId="topic"
+                            label="Select Topic"
+                            className="mb-3"
+                        >
+                            <Form.Select
+                                value={topic}
+                                onChange={e => setTopic(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            >
+                                <option value="">Choose a topic</option>
+                                <option value="science">Science</option>
+                                <option value="maths">Maths</option>
+                                <option value="programming">Programming</option>
+                                <option value="history">History</option>
+                                <option value="languages">Languages</option>
+                            </Form.Select>
+                        </FloatingLabel>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer style={{ borderTop: 'none', padding: '1.5rem' }}>
+                    <Button 
+                        variant="light" 
+                        onClick={handleClose}
+                        style={{ 
+                            borderRadius: '20px',
+                            padding: '8px 20px',
+                            marginRight: '10px'
+                        }}
+                    >
                         Cancel
                     </Button>
-                    <Button color="primary" onClick={handleSubmit}>
-                        Sumbit
+                    <Button 
+                        variant="primary" 
+                        onClick={handleSubmit}
+                        style={{ 
+                            backgroundColor: '#6962A6',
+                            border: 'none',
+                            borderRadius: '20px',
+                            padding: '8px 20px'
+                        }}
+                    >
+                        Create Post
                     </Button>
-                </DialogActions>
-            </Dialog>
+                </Modal.Footer>
+            </Modal>
         </Fragment>
     )
 }
 
-const addStyle = {
-  float: "right",
-  margin: "13px",
-};
-
 CreatePost.propTypes = {
     addPost: PropTypes.func.isRequired
 }
-export default connect(null, { addPost })( CreatePost )
+
+export default connect(null, { addPost })(CreatePost)

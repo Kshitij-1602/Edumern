@@ -1,154 +1,223 @@
 // TODO: add Reditrect when no profile
 // TODO: bug when click social link in same tab
 import React, { useEffect } from "react";
-import { Paper, Avatar, Chip, IconButton, Button } from "@material-ui/core";
-import Sidebar from '../layout/Sidebar'
+import { Card, Button, Badge } from "react-bootstrap";
+import { FaTwitter, FaYoutube, FaInstagram, FaFacebook, FaLinkedin, FaGithub, FaUser, FaUniversity, FaGraduationCap, FaMapMarkerAlt, FaUserCircle } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { getCurrentProfile, deleteAccount } from '../../actions/profile'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { 
-  Done, 
-  Twitter, 
-  YouTube, 
-  Instagram, 
-  Facebook, 
-  LinkedIn, 
-  GitHub } from '@material-ui/icons'
 import { Link, Redirect } from 'react-router-dom'
-
+import Sidebar from '../layout/Sidebar'
 
 function Profile({ profile: {profile, loading}, getCurrentProfile, deleteAccount }) {
   useEffect(() => {
     getCurrentProfile()
   }, [getCurrentProfile])
 
+  if (loading) {
+    return (
+      <Sidebar>
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+          <div className="spinner-border text-primary" role="status" style={{ color: '#6962A6', width: '3rem', height: '3rem' }}>
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </Sidebar>
+    );
+  }
+
+  if (!loading && profile === null) {
+    return <Redirect to='/edit-profile' />;
+  }
+
   return (
-    <React.Fragment>
-      {!loading && profile !== null && (
-        <React.Fragment>
-          <Sidebar />
-          <Paper className="content profile-style">
-            <div style={profileHeader}>
-              <Avatar alt="user image" style={avatarStyle} src={profile.avatar} />
-              <div style={{ margin: "25px" }}>
-                <h2>{profile.user.name}</h2>
-                <fieldset style={{ width: "700px", height: "200px", border: "1px solid black", padding: "8px" }}>
-                  <legend style={{ width: "auto", fontSize: "18px", margin: "8px" }}>
-                    Status
-              </legend>
-                  {profile.status ? (profile.status) : ("Edit Profile to add Status")}
-                </fieldset>
+    <Sidebar>
+      <div className="py-4 px-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card className="mb-4 border-0 shadow-sm" style={{ borderRadius: '15px', overflow: 'hidden' }}>
+            <Card.Body className="p-4">
+              <div className="d-flex align-items-center mb-4">
+                {profile.avatar && profile.avatar !== '' ? (
+                  <img 
+                    src={profile.avatar}
+                    alt={profile.user.name}
+                    className="rounded-circle me-4"
+                    style={{ 
+                      width: '120px', 
+                      height: '120px', 
+                      objectFit: 'cover',
+                      border: '3px solid #f8f9fa'
+                    }}
+                  />
+                ) : (
+                  <FaUserCircle 
+                    className="me-4"
+                    style={{
+                      width: '120px',
+                      height: '120px',
+                      color: '#e0e0e0',
+                      border: '3px solid #f8f9fa',
+                      borderRadius: '50%',
+                      background: '#fff'
+                    }}
+                  />
+                )}
+                <div>
+                  <h2 className="mb-2" style={{ color: '#393E41', fontWeight: '600' }}>{profile.user.name}</h2>
+                  <div className="d-flex align-items-center">
+                    <FaUser className="me-2" style={{ color: '#6962A6' }} />
+                    <p className="mb-0" style={{ color: '#666' }}>
+                      {profile.status || "No status set"}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div style={profileMain}>
+
+              <div className="row g-4">
+                <div className="col-md-6">
+                  <Card className="border-0" style={{ backgroundColor: '#f8f9fa', borderRadius: '10px' }}>
+                    <Card.Body>
+                      <h5 className="mb-3" style={{ color: '#393E41', fontWeight: '600' }}>Education</h5>
+                      <div className="d-flex align-items-center mb-3">
+                        <FaUniversity className="me-2" style={{ color: '#6962A6' }} />
+                        <p className="mb-0" style={{ color: '#666' }}>{profile.university || 'Not specified'}</p>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <FaGraduationCap className="me-2" style={{ color: '#6962A6' }} />
+                        <p className="mb-0" style={{ color: '#666' }}>{profile.degree || 'Not specified'}</p>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+
+                <div className="col-md-6">
+                  <Card className="border-0" style={{ backgroundColor: '#f8f9fa', borderRadius: '10px' }}>
+                    <Card.Body>
+                      <h5 className="mb-3" style={{ color: '#393E41', fontWeight: '600' }}>Location</h5>
+                      <div className="d-flex align-items-center">
+                        <FaMapMarkerAlt className="me-2" style={{ color: '#6962A6' }} />
+                        <p className="mb-0" style={{ color: '#666' }}>{profile.location || 'Not specified'}</p>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              </div>
+
               {profile.skills && profile.skills.length > 0 && (
-                <div style={{ display: 'block', marginTop: '5px' }}>
-                  <h4>Skills:</h4>
-                  {profile.skills.map((skill, index) => (
-                    <Chip
-                      key={index}
-                      label={skill}
-                      color="primary"
-                      onDelete={() => { }}
-                      style={{ margin: '10px' }}
-                      deleteIcon={<Done />}
-                    />
-                  ))}
+                <div className="mt-4">
+                  <h5 className="mb-3" style={{ color: '#393E41', fontWeight: '600' }}>Skills</h5>
+                  <div className="d-flex flex-wrap gap-2">
+                    {profile.skills.map((skill, index) => (
+                      <Badge 
+                        key={index}
+                        bg="light"
+                        text="dark"
+                        style={{ 
+                          padding: '8px 12px',
+                          borderRadius: '20px',
+                          fontSize: '0.9rem',
+                          backgroundColor: 'rgba(105, 98, 166, 0.1)',
+                          color: '#6962A6'
+                        }}
+                      >
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               )}
-              <h4>University:</h4>
-              <p style={profileText}>{profile.university}</p>
-              <h4>Degree:</h4>
-              <p style={profileText}>{profile.degree}</p>
-              <h4>Location:</h4>
-              <p style={profileText}>{profile.location}</p>
+
               {profile.social && (
-                <div style={{ display: 'block', marginTop: '5px' }}>
-                  <h4>Social Links:</h4>
-                  {profile.social.twitter && (
-                    <IconButton href={profile.social.twitter}>
-                      <Twitter />
-                    </IconButton>
-                  )}
-                  {profile.social.youtube && (
-                    <IconButton href={profile.social.youtube}>
-                      <YouTube />
-                    </IconButton>
-                  )}
-                  {profile.social.instagram && (
-                    <IconButton href={profile.social.instagram}>
-                      <Instagram />
-                    </IconButton>
-                  )}
-                  {profile.social.facebook && (
-                    <IconButton href={profile.social.facebook}>
-                      <Facebook />
-                    </IconButton>
-                  )}
-                  {profile.social.linkedin && (
-                    <IconButton href={profile.social.linkedin}>
-                      <LinkedIn />
-                    </IconButton>
-                  )}
-                  {profile.social.github && (
-                    <IconButton href={profile.social.github}>
-                      <GitHub />
-                    </IconButton>
-                  )}
+                <div className="mt-4">
+                  <h5 className="mb-3" style={{ color: '#393E41', fontWeight: '600' }}>Social Links</h5>
+                  <div className="d-flex gap-2">
+                    {profile.social.twitter && (
+                      <a href={profile.social.twitter} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                        <Button variant="light" size="sm" style={{ borderRadius: '20px', padding: '8px 12px' }}>
+                          <FaTwitter style={{ color: '#6962A6' }} />
+                        </Button>
+                      </a>
+                    )}
+                    {profile.social.youtube && (
+                      <a href={profile.social.youtube} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                        <Button variant="light" size="sm" style={{ borderRadius: '20px', padding: '8px 12px' }}>
+                          <FaYoutube style={{ color: '#6962A6' }} />
+                        </Button>
+                      </a>
+                    )}
+                    {profile.social.instagram && (
+                      <a href={profile.social.instagram} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                        <Button variant="light" size="sm" style={{ borderRadius: '20px', padding: '8px 12px' }}>
+                          <FaInstagram style={{ color: '#6962A6' }} />
+                        </Button>
+                      </a>
+                    )}
+                    {profile.social.facebook && (
+                      <a href={profile.social.facebook} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                        <Button variant="light" size="sm" style={{ borderRadius: '20px', padding: '8px 12px' }}>
+                          <FaFacebook style={{ color: '#6962A6' }} />
+                        </Button>
+                      </a>
+                    )}
+                    {profile.social.linkedin && (
+                      <a href={profile.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                        <Button variant="light" size="sm" style={{ borderRadius: '20px', padding: '8px 12px' }}>
+                          <FaLinkedin style={{ color: '#6962A6' }} />
+                        </Button>
+                      </a>
+                    )}
+                    {profile.social.github && (
+                      <a href={profile.social.github} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                        <Button variant="light" size="sm" style={{ borderRadius: '20px', padding: '8px 12px' }}>
+                          <FaGithub style={{ color: '#6962A6' }} />
+                        </Button>
+                      </a>
+                    )}
+                  </div>
                 </div>
               )}
-              <p style={{ margin: '10px' }}>
+
+              <div className="mt-4 d-flex gap-2">
                 <Button
-                  variant='contained'
-                  color='secondary'
-                  // style={{ display: 'block' }}
-                  component={Link}
-                  to='/edit-profile'>
-                    Edit Profile
+                  as={Link}
+                  to="/edit-profile"
+                  variant="primary"
+                  style={{
+                    backgroundColor: '#6962A6',
+                    border: 'none',
+                    borderRadius: '20px',
+                    padding: '8px 20px'
+                  }}
+                >
+                  Edit Profile
                 </Button>
                 <Button
-                  variant='contained'
-                  style={{ marginLeft: '10px', backgroundColor: '#343a40', color: 'white' }}
-                  onClick={() => deleteAccount()}
+                  variant="danger"
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                      deleteAccount();
+                    }
+                  }}
+                  style={{
+                    borderRadius: '20px',
+                    padding: '8px 20px'
+                  }}
                 >
                   Delete Account
                 </Button>
-              </p>
-            </div>
-          </Paper>
-        </React.Fragment>
-      )}
-      {!loading && profile === null && (
-        <Redirect to='edit-profile' />
-      )}
-    </React.Fragment>
+              </div>
+            </Card.Body>
+          </Card>
+        </motion.div>
+      </div>
+    </Sidebar>
   );
 }
-
-const profileHeader = {
-  display: "flex",
-};
-
-const avatarStyle = {
-  margin: "15px",
-  alignSelf: "center",
-  backgroundColor: "orange",
-  height: "150px",
-  width: "150px",
-};
-
-const profileMain = {
-  margin: "18px",
-  marginLeft: "100px",
-};
-
-const profileText = {
-  display: "inline-block",
-  border: "1px solid black",
-  padding: "8px",
-  width: "600px",
-  borderRadius: "5px",
-};
 
 Profile.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,

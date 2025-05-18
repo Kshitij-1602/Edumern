@@ -1,7 +1,7 @@
 // TODO: add Reditrect when no profile
 // TODO: bug when click social link in same tab
 import React, { useEffect } from "react";
-import { Paper, Avatar, Chip, IconButton, Button } from "@material-ui/core";
+import { Paper, Avatar, Chip, IconButton } from "@material-ui/core";
 import Sidebar from '../layout/Sidebar'
 import { getProfileById } from '../../actions/profile'
 import { connect } from 'react-redux'
@@ -14,7 +14,6 @@ import {
   Facebook, 
   LinkedIn, 
   GitHub } from '@material-ui/icons'
-import { Link } from 'react-router-dom'
 
 
 function ProfileById({ profile: {profile, loading}, getProfileById, match }) {

@@ -1,92 +1,123 @@
 import React from 'react'
-import { Paper, IconButton, Avatar } from '@material-ui/core'
-import { Block, KeyboardArrowUp, KeyboardArrowDown, Delete } from '@material-ui/icons'
-import { addCommentLike, addCommentDislike, deleteComment } from '../../actions/post'
-import { Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
+import { FaTrash, FaFlag } from 'react-icons/fa'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import { deleteComment } from '../../actions/post'
 
-function CommentItem({
-    postId,
-    addCommentLike,
-    addCommentDislike,
-    deleteComment,
+const CommentItem = ({ 
+    postId, 
+    comment: { _id, text, name, avatar, user, date },
     auth,
-    comment: { _id, text, name, avatar, user, likes, dislikes, date }
-}) {
+    deleteComment
+}) => {
+    const handleDelete = () => {
+        if (window.confirm('Are you sure you want to delete this comment?')) {
+            deleteComment(postId, _id)
+        }
+    }
+
     return (
-        <div style={previewStyle}>
-            <Paper elevation={3}>
-                <Link to={`/profile/${user}`} style={linkStyle}>
-                    <Avatar src={avatar} style={avatarStyle}/>
-                    <span style={nameStyle}>{name}</span>
+        <div className="comment-item mb-3 p-3" style={{ 
+            backgroundColor: '#f8f9fa', 
+            borderRadius: '10px',
+            border: '1px solid #e9ecef'
+        }}>
+            <div className="d-flex align-items-center mb-2">
+                <Link to={`/profile/${user}`} className="text-decoration-none">
+                    <div className="d-flex align-items-center">
+                        <img 
+                            src={avatar} 
+                            alt={name}
+                            className="rounded-circle me-2"
+                            style={{ 
+                                width: '35px', 
+                                height: '35px', 
+                                objectFit: 'cover',
+                                border: '2px solid #fff',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                            }}
+                        />
+                        <div>
+                            <h6 className="mb-0" style={{ color: '#393E41', fontWeight: '600', fontSize: '0.9rem' }}>{name}</h6>
+                            <small className="text-muted" style={{ fontSize: '0.8rem' }}>
+                                {new Date(date).toLocaleDateString()}
+                            </small>
+                        </div>
+                    </div>
                 </Link>
-                <p style={textStyle}>{ text }</p>
-                <div style={buttonStyle}>
-                    <IconButton size='small' onClick={e => addCommentLike(postId, _id)}>
-                        <KeyboardArrowUp fontSize='default' />
-                    </IconButton>
-                    <h5>{likes.length - dislikes.length}</h5>
-                    <IconButton size='small' onClick={e => addCommentDislike(postId, _id)}>
-                        <KeyboardArrowDown fontSize='default' />
-                    </IconButton>
-                    {/* <IconButton size='small' href="mailto:devankrf@gmail.com?subject=Reporting content from EduForum">
-                        <Block fontSize='inherit' />
-                        <span style={{ fontSize: '0.7em' }}>Report</span>
-                    </IconButton> */}
-                    <IconButton size='small' component={Link} to={`/report/comment/${_id}`}>
-                        <Block fontSize='inherit' />
-                        <span style={{ fontSize: '0.7em' }}>Report</span>
-                    </IconButton>
-                    {!auth.loading && user === auth.user._id && (
-                        <IconButton size='small' onClick={e => deleteComment(postId, _id)}>
-                            <Delete fontSize='default' />
-                        </IconButton>
-                    )}
-                </div>
-            </Paper>
+            </div>
+            <p className="mb-3" style={{ 
+                color: '#666', 
+                fontSize: '0.95rem', 
+                lineHeight: '1.5',
+                marginLeft: '47px' // Aligns with the name after the avatar
+            }}>{text}</p>
+            <div className="d-flex align-items-center" style={{ marginLeft: '47px' }}>
+                <Link 
+                    to={`/report/comment/${_id}`} 
+                    className="btn btn-light btn-sm me-2" 
+                    style={{ 
+                        borderRadius: '15px', 
+                        padding: '5px 10px',
+                        backgroundColor: '#fff',
+                        border: '1px solid #e9ecef',
+                        color: '#666',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = '#f8f9fa';
+                        e.currentTarget.style.color = '#6962A6';
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fff';
+                        e.currentTarget.style.color = '#666';
+                    }}
+                >
+                    <FaFlag className="me-1" />
+                    Report
+                </Link>
+                {!auth.loading && user === auth.user._id && (
+                    <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={handleDelete}
+                        style={{ 
+                            borderRadius: '15px', 
+                            padding: '5px 10px',
+                            backgroundColor: '#fff',
+                            border: '1px solid #dc3545',
+                            color: '#dc3545',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = '#dc3545';
+                            e.currentTarget.style.color = '#fff';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = '#fff';
+                            e.currentTarget.style.color = '#dc3545';
+                        }}
+                    >
+                        <FaTrash className="me-1" />
+                        Delete
+                    </Button>
+                )}
+            </div>
         </div>
     )
 }
-const previewStyle = {
-    margin: '15px'
-}
-
-const textStyle = {
-    margin: '14px',
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word'
-}
-
-const buttonStyle = {
-    margin: '5px',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    gap: '5px'
-}
-
-const linkStyle = { 
-    padding: '8px 8px',
-    display: 'table',
-    textDecoration: 'none' 
-}
-const avatarStyle = { 
-    display: 'table-cell' 
-}
-const nameStyle = { 
-    display: 'table-cell', 
-    verticalAlign: 'middle', 
-    padding: '5px', 
-    color: 'black' 
-}
 
 CommentItem.propTypes = {
-    deleteComment: PropTypes.func.isRequired,
-    addCommentLike: PropTypes.func.isRequired,
-    addCommentDislike: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
+    postId: PropTypes.string.isRequired,
+    comment: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
+    deleteComment: PropTypes.func.isRequired
 }
+
 const mapStateToProps = state => ({
     auth: state.auth
 })
-export default connect(mapStateToProps, { addCommentLike, addCommentDislike, deleteComment })( CommentItem )
+
+export default connect(mapStateToProps, { deleteComment })(CommentItem)

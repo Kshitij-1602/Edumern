@@ -10,7 +10,7 @@
     "clientinstall": "npm install --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "npm install &&  npm install --prefix client && npm run build --prefix client",
-    "render-postbuild": "npm install && NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "render-postbuild": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "author": "Kshitij Mohanka",
   "license": "GPL-3.0",
@@ -20,8 +20,8 @@
     "express": "^4.17.1",
     "express-validator": "^6.11.1",
     "gravatar": "^1.8.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.12",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.0",
     "request": "^2.88.2"
   },
   "devDependencies": {

@@ -1,77 +1,73 @@
-import React, { Fragment, useState } from 'react'
-import {
-    Fab,
-    Button,
-    TextField,
-    Dialog,
-    DialogActions,
-    DialogTitle,
-    DialogContent,
-} from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+import React, { useState } from 'react'
+import { Form, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { addComment } from '../../actions/post'
+import { motion } from 'framer-motion'
 
 const CreateComment = ({ postId, addComment }) => {
     const [text, setText] = useState('')
-    const [open, setOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
+
     const handleClose = () => {
-        setOpen(false)
+        setIsOpen(false)
         setText('')
     }
-    const handleSubmit = () => {
-        addComment(postId, { text })
-        console.log(postId)
-        console.log(text)
-        handleClose()
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if (text.trim()) {
+            addComment(postId, { text })
+            handleClose()
+        }
     }
+
     return (
-        <Fragment>
-            <div style={addStyle}>
-                <Fab
-                    onClick={() => setOpen(true)}
-                    size="medium"
-                    color="primary"
-                    aria-label="new_thread"
-                >
-                    <Add />
-                </Fab>
-            </div>
-            <Dialog fullWidth={true} maxWidth="md" open={open} onClose={handleClose}>
-                <DialogTitle>New Comment</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        margin="dense"
-                        name="comment"
-                        label="Comment"
-                        multiline
-                        rows={10}
-                        variant="outlined"
-                        onChange={e => setText(e.target.value)}
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+        >
+            <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Write a comment..."
                         value={text}
-                        fullWidth
+                        onChange={e => setText(e.target.value)}
+                        style={{
+                            borderRadius: '10px',
+                            resize: 'none',
+                            border: '1px solid #e9ecef',
+                            padding: '12px',
+                            backgroundColor: '#f8f9fa'
+                        }}
                     />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="secondary">
-                        Cancel
+                </Form.Group>
+                <div className="d-flex justify-content-end">
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={!text.trim()}
+                        style={{
+                            backgroundColor: '#6962A6',
+                            border: 'none',
+                            borderRadius: '20px',
+                            padding: '8px 20px'
+                        }}
+                    >
+                        Post Comment
                     </Button>
-                    <Button color="primary" onClick={handleSubmit}>
-                        Sumbit
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </Fragment>
+                </div>
+            </Form>
+        </motion.div>
     )
 }
 
-const addStyle = {
-  float: "right",
-  margin: "13px",
-};
-
 CreateComment.propTypes = {
-    addComment: PropTypes.func.isRequired
+    addComment: PropTypes.func.isRequired,
+    postId: PropTypes.string.isRequired
 }
-export default connect(null, { addComment })( CreateComment )
+
+export default connect(null, { addComment })(CreateComment)

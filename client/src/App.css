@@ -162,3 +162,36 @@ body {
   cursor: pointer;
   float: right;
 }
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px 0;
+}
+
+/* Override Bootstrap styles if needed */
+.btn-primary {
+  background-color: #ff5722;
+  border-color: #ff5722;
+}
+
+.btn-primary:hover {
+  background-color: #f4511e;
+  border-color: #f4511e;
+}
+
+.btn-outline-primary {
+  color: #ff5722;
+  border-color: #ff5722;
+}
+
+.btn-outline-primary:hover {
+  background-color: rgba(255, 87, 34, 0.04);
+  color: #ff5722;
+  border-color: #ff5722;
+}
