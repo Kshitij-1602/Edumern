@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -16,6 +16,14 @@ const Login = ({ login, isAuthenticated, alert }) => {
     const [validated, setValidated] = useState(false);
 
     const { email, password } = formData;
+
+    // Stop loading if an error alert is received
+    useEffect(() => {
+        if (alert && alert.length > 0) {
+            const hasError = alert.some(a => a.alertType === 'danger');
+            if (hasError) setLoading(false);
+        }
+    }, [alert]);
 
     const onChange = e => {
         setFormData({
@@ -137,10 +145,10 @@ const Login = ({ login, isAuthenticated, alert }) => {
                                         variant="primary" 
                                         type="submit" 
                                         className="w-100 py-2 mb-3"
-                                        disabled={loading}
+                                        disabled={loading || !email || !password}
                                         style={{
-                                            backgroundColor: "#ff8c69",
-                                            borderColor: "#ff8c69",
+                                            backgroundColor: "#ff5722",
+                                            borderColor: "#ff5722",
                                             transition: "all 0.3s ease"
                                         }}
                                         onMouseOver={(e) => {

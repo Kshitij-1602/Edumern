@@ -101,18 +101,21 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                                     variant="primary" 
                                     type="submit" 
                                     className="w-100 py-2 mb-3"
+                                    disabled={
+                                        !name || !email || !password || !password2 || password !== password2
+                                    }
                                     style={{
                                         backgroundColor: "#ff5722",
                                         borderColor: "#ff5722",
                                         transition: "all 0.3s ease"
                                     }}
                                     onMouseOver={(e) => {
-                                        e.target.style.backgroundColor = "#f4511e";
-                                        e.target.style.borderColor = "#f4511e";
+                                        e.target.style.backgroundColor = "#ff7b54";
+                                        e.target.style.borderColor = "#ff7b54";
                                     }}
                                     onMouseOut={(e) => {
-                                        e.target.style.backgroundColor = "#ff5722";
-                                        e.target.style.borderColor = "#ff5722";
+                                        e.target.style.backgroundColor = "#ff8c69";
+                                            e.target.style.borderColor = "#ff8c69";
                                     }}
                                 >
                                     Create Account
